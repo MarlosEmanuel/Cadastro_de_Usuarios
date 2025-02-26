@@ -40,7 +40,9 @@ public class UsuarioService {
 
 
     //Implementar no controller !!
-    public Optional<UsuarioResponse> findByNome(String nome) {
-        return usuarioRepository.findByNome(nome).map(UsuarioMapper::mapResponse);
+    public List<UsuarioResponse> findByNome(String nome) {
+        return usuarioRepository.findByNomeContainingIgnoreCase(nome).stream()
+                .map(UsuarioMapper::mapResponse)
+                .collect(Collectors.toList());
     }
 }

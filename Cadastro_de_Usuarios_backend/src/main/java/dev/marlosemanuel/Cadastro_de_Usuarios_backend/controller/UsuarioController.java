@@ -1,4 +1,5 @@
 package dev.marlosemanuel.Cadastro_de_Usuarios_backend.controller;
+import dev.marlosemanuel.Cadastro_de_Usuarios_backend.mapper.UsuarioMapper;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.request.UsuarioRequest;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.response.UsuarioResponse;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.service.UsuarioService;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,11 +34,16 @@ public class UsuarioController {
         return usuarioService.save(request);
     }
 
-    @GetMapping("/nome/{nome}")
-    public ResponseEntity<UsuarioResponse> findByNome(@PathVariable String nome) {
-        return usuarioService.findByNome(nome)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/pesquisa/{nome}")
+    public ResponseEntity<List<UsuarioResponse>> findByNome(@PathVariable String nome) {
+        List<UsuarioResponse> usuarios = usuarioService.findByNome(nome);
+
+        if (!usuarios.isEmpty()) {
+            return ResponseEntity.ok(usuarios);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/delete/{id}")
