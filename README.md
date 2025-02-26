@@ -13,7 +13,7 @@ Este sistema fornece uma API para cadastro, listagem e remoção de usuários.
 ### 2. Cadastrar um novo usuário
 
 **Método:** POST\
-**URL:** `http://localhost:8080/usuarios/save`\
+**URL:** `http://localhost:8080/usuarios`\
 **Descrição:** Salva um novo usuário no sistema.
 
 **Corpo da Requisição (JSON):**
@@ -35,11 +35,31 @@ Este sistema fornece uma API para cadastro, listagem e remoção de usuários.
 ### 4. Deletar um usuário por ID
 
 **Método:** DELETE\
-**URL:** `http://localhost:8080/usuarios/delete/{id}`\
+**URL:** `http://localhost:8080/usuarios/{id}`\
 **Descrição:** Remove um usuário do sistema com base no ID fornecido.
 
 ### 5. Pesquisar por nome
 
 **Método:** GET\
-**URL:** `http://localhost:8080/usuarios/nome/{nome}`\
+**URL:** `http://localhost:8080/usuarios/pesquisa/{nome}`\
 **Descrição:** Retorna os detalhes de um usuário específico com base no NOME fornecido.
+
+### 6. Editar um usuario
+
+**Método:** PUT\
+**URL:** `http://localhost:8080/usuarios/{id}`\
+**Descrição:** edita um usuario
+
+**Corpo da Requisição (JSON):**
+
+```json
+{
+    "nome": "João Guibaz",
+    "idade": 21,
+    "cpf": "12314102781312"
+}
+```
+
+OBS: caso um campo fique sem nada, vai ser salvo como null no banco de dados.
+
+
