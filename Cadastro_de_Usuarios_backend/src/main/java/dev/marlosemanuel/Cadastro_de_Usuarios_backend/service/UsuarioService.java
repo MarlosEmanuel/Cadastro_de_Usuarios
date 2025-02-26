@@ -39,9 +39,8 @@ public class UsuarioService {
     }
 
 
-
     //Implementar no controller !!
-    public Optional<Usuario> findByNome(String nome) {
-        return usuarioRepository.findByNome(nome);
+    public Optional<UsuarioResponse> findByNome(String nome) {
+        return usuarioRepository.findByNome(nome).map(UsuarioMapper::mapResponse);
     }
 }
