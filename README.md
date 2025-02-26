@@ -38,3 +38,8 @@ Este sistema fornece uma API para cadastro, listagem e remoção de usuários.
 **URL:** `http://localhost:8080/usuarios/delete/{id}`\
 **Descrição:** Remove um usuário do sistema com base no ID fornecido.
 
+### 5. Pesquisar por nome
+
+**Método:** GET\
+**URL:** `http://localhost:8080/usuarios/nome/{nome}`\
+**Descrição:** Retorna os detalhes de um usuário específico com base no NOME fornecido.
