@@ -38,8 +38,6 @@ public class UsuarioService {
         return usuarioRepository.findById(id).map(UsuarioMapper::mapResponse);
     }
 
-
-    //Implementar no controller !!
     public List<UsuarioResponse> findByNome(String nome) {
         return usuarioRepository.findByNomeContainingIgnoreCase(nome).stream()
                 .map(UsuarioMapper::mapResponse)
