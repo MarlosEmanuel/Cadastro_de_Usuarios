@@ -2,9 +2,11 @@ package dev.marlosemanuel.Cadastro_de_Usuarios_backend.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Entity
 @Table(name = "tb_usuario")
 @Data

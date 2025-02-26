@@ -1,13 +1,12 @@
 package dev.marlosemanuel.Cadastro_de_Usuarios_backend.controller;
-
-import dev.marlosemanuel.Cadastro_de_Usuarios_backend.model.Usuario;
+import dev.marlosemanuel.Cadastro_de_Usuarios_backend.request.UsuarioRequest;
+import dev.marlosemanuel.Cadastro_de_Usuarios_backend.response.UsuarioResponse;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,21 +16,27 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @GetMapping
-    public List<Usuario> findAll() {
+    public List<UsuarioResponse> findAll() {
         return usuarioService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> findById(@PathVariable Long id) {
+    public ResponseEntity<UsuarioResponse> findById(@PathVariable Long id) {
         return usuarioService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Usuario> create(@RequestBody Usuario usuario) {
-        usuarioService.save(usuario);
-        return ResponseEntity.ok(usuario);
+    public UsuarioResponse create(@RequestBody UsuarioRequest request) {
+        return usuarioService.save(request);
+    }
+
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<UsuarioResponse> findByNome(@PathVariable String nome) {
+        return usuarioService.findByNome(nome)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/delete/{id}")
