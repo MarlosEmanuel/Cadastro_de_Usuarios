@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,7 +30,7 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/save")
+    @PostMapping
     public UsuarioResponse create(@RequestBody UsuarioRequest request) {
         return usuarioService.save(request);
     }
@@ -46,12 +47,24 @@ public class UsuarioController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (usuarioService.findById(id).isPresent()) {
             usuarioService.delete(id);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponse> update(@PathVariable long id, @RequestBody UsuarioRequest request) {
+        Optional<UsuarioResponse> usuario = usuarioService.findById(id);
+        if (usuario.isPresent()) {
+            UsuarioResponse response = usuarioService.edit(id, request);
+            return ResponseEntity.ok(response);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

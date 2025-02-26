@@ -43,4 +43,16 @@ public class UsuarioService {
                 .map(UsuarioMapper::mapResponse)
                 .collect(Collectors.toList());
     }
+
+    public UsuarioResponse edit(Long id, UsuarioRequest request) {
+        return usuarioRepository.findById(id)
+                .map(user -> {
+                    user.setNome(request.nome());
+                    user.setIdade(request.idade());
+                    user.setCpf(request.cpf());
+                    usuarioRepository.save(user);
+                    return UsuarioMapper.mapResponse(user);
+                })
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+    }
 }
