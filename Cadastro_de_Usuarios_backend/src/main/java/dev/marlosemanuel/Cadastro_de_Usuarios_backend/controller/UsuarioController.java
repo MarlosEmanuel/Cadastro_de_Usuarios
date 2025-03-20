@@ -4,6 +4,7 @@ import dev.marlosemanuel.Cadastro_de_Usuarios_backend.request.UsuarioRequest;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.response.UsuarioResponse;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public UsuarioResponse create(@RequestBody UsuarioRequest request) {
+    public ResponseEntity<?> create(@RequestBody UsuarioRequest request) {
         return usuarioService.save(request);
     }
 

@@ -6,6 +6,8 @@ import dev.marlosemanuel.Cadastro_de_Usuarios_backend.repository.UsuarioReposito
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.request.UsuarioRequest;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.response.UsuarioResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +26,24 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    public UsuarioResponse save(UsuarioRequest request) {
-        Usuario usuario = UsuarioMapper.mapEntity(request);
-        usuarioRepository.save(usuario);
-        return UsuarioMapper.mapResponse(usuario);
+    public ResponseEntity<?> save(UsuarioRequest request) {
+       if (request == null) {
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Requisição Invalida");
+       }
+       if (request.nome().isEmpty()  || request.idade() == 0 || request.cpf().isEmpty()) {
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Todos os campos devem ser obrigatorios");
+       }
+       if (usuarioRepository.existsByCpf(request.cpf())) {
+           return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF ja cadastrado.");
+       }
+       try {
+           Usuario usuario = UsuarioMapper.mapEntity(request);
+           usuarioRepository.save(usuario);
+
+           return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.mapResponse(usuario));
+       } catch (Exception e){
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar usuario");
+       }
     }
 
     public void delete(Long id) {
