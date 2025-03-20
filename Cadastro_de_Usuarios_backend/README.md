@@ -26,6 +26,10 @@ Este sistema fornece uma API para cadastro, listagem e remoção de usuários.
 }
 ```
 
+#### 2.1 Respostas:
+- 201 - Usuario criado com sucesso.
+- 409 - Conflito, existe um usuario cadastrado com o mesmo cpf.
+- 400 - Todos os campos precisam ser obrigatorios.
 ### 3. Buscar um usuário por ID
 
 **Método:** GET\
