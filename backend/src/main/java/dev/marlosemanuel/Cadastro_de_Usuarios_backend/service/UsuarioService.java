@@ -38,6 +38,7 @@ public class UsuarioService {
        }
        try {
            Usuario usuario = UsuarioMapper.mapEntity(request);
+           usuario.setCpf(formatarCpf(usuario.getCpf()));
            usuarioRepository.save(usuario);
 
            return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.mapResponse(usuario));
@@ -70,5 +71,13 @@ public class UsuarioService {
                     return UsuarioMapper.mapResponse(user);
                 })
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+    }
+
+    private String formatarCpf(String cpf) {
+        if (cpf != null) {
+            // Remove todos os caracteres não numéricos
+            return cpf.replaceAll("[^0-9]", "");
+        }
+        return null;
     }
 }
