@@ -35,7 +35,17 @@ const Cadastro = () => {
       setCpf("");
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);
-      setError("Falha ao cadastrar. Verifique os dados.");
+
+      // Verificar o status code da resposta de erro
+      if (error.response) {
+        if (error.response.status === 400) {
+          alert("O campo 'Nome' está vazio. Por favor, preencha-o.");
+        } else if (error.response.status === 409) {
+          alert("Erro: Esse CPF já foi cadastrado.");
+        } else {
+          alert("Erro desconhecido. Tente novamente.");
+        }
+      } 
     }
   };
 
@@ -119,9 +129,11 @@ const Cadastro = () => {
             placeholder="CPF"
             value={cpf}
             onChange={handleCpfChange}
+            minLength={14}
             maxLength={14} // xxx.xxx.xxx-xx => 14 caracteres
-            required/>
-  <FaIdCard className="icon" />
+            required
+          />
+          <FaIdCard className="icon" />
         </div>
 
         <button>Cadastrar</button>
@@ -130,4 +142,4 @@ const Cadastro = () => {
   );
 };
 
-export default Cadastro;
+export default Cadastro
