@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     List<Usuario> findByNomeContainingIgnoreCase(String nome);
-    Optional<Usuario> findByCpf(String cpf);
-    boolean existsByCpf(String cpf);
+    Optional<Usuario> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

@@ -30,17 +30,15 @@ public class UsuarioService {
        if (request == null) {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Requisição Invalida");
        }
-       if (request.nome().isEmpty()  || request.idade() == 0 || request.cpf().isEmpty()) {
+       if (request.nome().isEmpty()  || request.idade() == 0 || request.email().isEmpty()) {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Todos os campos devem ser obrigatorios");
        }
-       if (usuarioRepository.existsByCpf(request.cpf())) {
-           return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF ja cadastrado.");
+       if (usuarioRepository.existsByEmail(request.email())) {
+           return ResponseEntity.status(HttpStatus.CONFLICT).body("email já cadastrado.");
        }
        try {
            Usuario usuario = UsuarioMapper.mapEntity(request);
-           usuario.setCpf(formatarCpf(usuario.getCpf()));
            usuarioRepository.save(usuario);
-
            return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.mapResponse(usuario));
        } catch (Exception e){
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar usuario");
@@ -66,18 +64,10 @@ public class UsuarioService {
                 .map(user -> {
                     user.setNome(request.nome());
                     user.setIdade(request.idade());
-                    user.setCpf(request.cpf());
+                    user.setEmail(request.email());
                     usuarioRepository.save(user);
                     return UsuarioMapper.mapResponse(user);
                 })
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-    }
-
-    private String formatarCpf(String cpf) {
-        if (cpf != null) {
-            // Remove todos os caracteres não numéricos
-            return cpf.replaceAll("[^0-9]", "");
-        }
-        return null;
     }
 }
