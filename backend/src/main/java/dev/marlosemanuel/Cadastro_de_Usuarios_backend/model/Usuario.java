@@ -1,29 +1,22 @@
 package dev.marlosemanuel.Cadastro_de_Usuarios_backend.model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "users")
 @Builder
-@Entity
-@Table(name = "tb_usuario")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(nullable = false, name="nome")
+    private String id;
     private String nome;
-
-    @Column(nullable = false, name = "idade")
     private int idade;
-
-    @Column(unique = true, nullable = false, name = "cpf")
     private String cpf;
 }

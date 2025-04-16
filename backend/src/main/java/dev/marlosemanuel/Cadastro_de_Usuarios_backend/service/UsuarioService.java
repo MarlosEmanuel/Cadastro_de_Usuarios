@@ -47,11 +47,11 @@ public class UsuarioService {
        }
     }
 
-    public void delete(Long id) {
+    public void delete(String id) {
         usuarioRepository.deleteById(id);
     }
 
-    public Optional<UsuarioResponse> findById(Long id) {
+    public Optional<UsuarioResponse> findById(String id) {
         return usuarioRepository.findById(id).map(UsuarioMapper::mapResponse);
     }
 
@@ -61,7 +61,7 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    public UsuarioResponse edit(Long id, UsuarioRequest request) {
+    public UsuarioResponse edit(String id, UsuarioRequest request) {
         return usuarioRepository.findById(id)
                 .map(user -> {
                     user.setNome(request.nome());
