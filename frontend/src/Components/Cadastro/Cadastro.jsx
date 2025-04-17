@@ -21,7 +21,7 @@ const Cadastro = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/usuario", {
+      const response = await axios.post("https://cadastrodeusuarios-production.up.railway.app/usuario", {
         nome: nome,
         idade: parsedIdade,
         email: email,  // Enviando o email para o backend
