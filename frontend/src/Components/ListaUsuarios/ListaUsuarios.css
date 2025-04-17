@@ -1,0 +1,38 @@
+.lista-container {
+    width: 80%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    color: white;
+    text-shadow: none;
+}
+
+.usuarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+    text-shadow: none;
+}
+
+.usuario-card {
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    text-shadow: none;
+}
+
+.voltar-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: white;
+    color: #000;
+    text-decoration: none;
+    border-radius: 40px;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: none;
+}

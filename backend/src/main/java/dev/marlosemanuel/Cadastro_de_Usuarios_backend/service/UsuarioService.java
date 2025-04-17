@@ -30,27 +30,26 @@ public class UsuarioService {
        if (request == null) {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Requisição Invalida");
        }
-       if (request.nome().isEmpty()  || request.idade() == 0 || request.cpf().isEmpty()) {
+       if (request.nome().isEmpty()  || request.idade() == 0 || request.email().isEmpty()) {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Todos os campos devem ser obrigatorios");
        }
-       if (usuarioRepository.existsByCpf(request.cpf())) {
-           return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF ja cadastrado.");
+       if (usuarioRepository.existsByEmail(request.email())) {
+           return ResponseEntity.status(HttpStatus.CONFLICT).body("email já cadastrado.");
        }
        try {
            Usuario usuario = UsuarioMapper.mapEntity(request);
            usuarioRepository.save(usuario);
-
            return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.mapResponse(usuario));
        } catch (Exception e){
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar usuario");
        }
     }
 
-    public void delete(Long id) {
+    public void delete(String id) {
         usuarioRepository.deleteById(id);
     }
 
-    public Optional<UsuarioResponse> findById(Long id) {
+    public Optional<UsuarioResponse> findById(String id) {
         return usuarioRepository.findById(id).map(UsuarioMapper::mapResponse);
     }
 
@@ -60,12 +59,12 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    public UsuarioResponse edit(Long id, UsuarioRequest request) {
+    public UsuarioResponse edit(String id, UsuarioRequest request) {
         return usuarioRepository.findById(id)
                 .map(user -> {
                     user.setNome(request.nome());
                     user.setIdade(request.idade());
-                    user.setCpf(request.cpf());
+                    user.setEmail(request.email());
                     usuarioRepository.save(user);
                     return UsuarioMapper.mapResponse(user);
                 })

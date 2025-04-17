@@ -11,7 +11,7 @@ public class UsuarioMapper {
     public Usuario mapEntity(UsuarioRequest request){
         return Usuario.builder()
                 .nome(request.nome())
-                .cpf(request.cpf())
+                .email(request.email())
                 .idade(request.idade())
                 .build();
     }
@@ -21,7 +21,7 @@ public class UsuarioMapper {
                 .id(usuario.getId())
                 .nome(usuario.getNome())
                 .idade(usuario.getIdade())
-                .cpf(usuario.getCpf())
+                .email(usuario.getEmail())
                 .build();
     }
 
