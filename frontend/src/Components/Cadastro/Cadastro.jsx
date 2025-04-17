@@ -2,11 +2,12 @@ import { FaUser, FaBirthdayCake, FaIdCard } from "react-icons/fa";
 import { useState } from "react";
 import "./Cadastro.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Cadastro = () => {
   const [nome, setNome] = useState("");
   const [idade, setIdade] = useState("");
-  const [cpf, setCpf] = useState("");
+  const [email, setEmail] = useState(""); // Alterado de cpf para email
   const [error, setError] = useState("");
 
   const handleSubmit = async (event) => {
@@ -23,7 +24,7 @@ const Cadastro = () => {
       const response = await axios.post("http://localhost:8080/usuario", {
         nome: nome,
         idade: parsedIdade,
-        cpf: cpf,
+        email: email,  // Enviando o email para o backend
       });
 
       console.log("Usuário cadastrado:", response.data);
@@ -32,7 +33,7 @@ const Cadastro = () => {
       // Limpar os campos após o cadastro
       setNome("");
       setIdade("");
-      setCpf("");
+      setEmail("");  // Limpar o campo de email
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);
 
@@ -40,8 +41,6 @@ const Cadastro = () => {
       if (error.response) {
         if (error.response.status === 400) {
           alert("O campo 'Nome' está vazio. Por favor, preencha-o.");
-        } else if (error.response.status === 409) {
-          alert("Erro: Esse CPF já foi cadastrado.");
         } else {
           alert("Erro desconhecido. Tente novamente.");
         }
@@ -61,28 +60,9 @@ const Cadastro = () => {
     setIdade(val);
   };
 
-  // Formatação automática do CPF: xxx.xxx.xxx-xx (limite 11 dígitos)
-  const handleCpfChange = (e) => {
-    let val = e.target.value.replace(/\D/g, "");
-    if (val.length > 11) {
-      val = val.slice(0, 11);
-    }
-
-    let masked = "";
-    if (val.length >= 1) {
-      masked = val.substring(0, 3);
-    }
-    if (val.length >= 4) {
-      masked += "." + val.substring(3, 6);
-    }
-    if (val.length >= 7) {
-      masked += "." + val.substring(6, 9);
-    }
-    if (val.length >= 10) {
-      masked += "-" + val.substring(9, 11);
-    }
-
-    setCpf(masked);
+  // A validação do e-mail pode ser feita com um regex simples para garantir que o valor inserido seja um email válido
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);  // Aqui, apenas configuramos o valor do email
   };
 
   return (
@@ -122,24 +102,25 @@ const Cadastro = () => {
           <FaBirthdayCake className="icon" />
         </div>
 
-        {/* CPF: type="text" para poder inserir '.' e '-' na máscara */}
+        {/* E-mail: aceitando caracteres comuns para email */}
         <div className="input-field">
           <input
-            type="text"
-            placeholder="CPF"
-            value={cpf}
-            onChange={handleCpfChange}
-            minLength={14}
-            maxLength={14} // xxx.xxx.xxx-xx => 14 caracteres
+            type="email"  // Alterado para 'email' para garantir que é um campo de e-mail
+            placeholder="E-mail"
+            value={email}
+            onChange={handleEmailChange}
             required
           />
           <FaIdCard className="icon" />
         </div>
 
         <button>Cadastrar</button>
+        <Link to="/lista-usuarios" className="lista-btn">
+        Ver Usuários Cadastrados
+        </Link>
       </form>
     </div>
   );
 };
 
-export default Cadastro
+export default Cadastro;
