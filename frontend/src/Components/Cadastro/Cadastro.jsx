@@ -1,145 +1,94 @@
-import { FaUser, FaBirthdayCake, FaIdCard } from "react-icons/fa";
+import { FaUser, FaBirthdayCake, FaEnvelope } from "react-icons/fa";
 import { useState } from "react";
-import "./Cadastro.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import "./Cadastro.css";
 
 const Cadastro = () => {
-  const [nome, setNome] = useState("");
+  const [nome,  setNome]  = useState("");
   const [idade, setIdade] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    // Verificação simples em JS para garantir 18..120:
-    const parsedIdade = parseInt(idade, 10);
-    if (isNaN(parsedIdade) || parsedIdade < 18 || parsedIdade > 120) {
-      alert("Idade inválida! Digite um valor entre 18 e 120 anos.");
+    const parsed = parseInt(idade, 10);
+    if (isNaN(parsed) || parsed < 18 || parsed > 120) {
+      alert("Idade inválida (digite 18–120).");
       return;
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/usuario", {
-        nome: nome,
-        idade: parsedIdade,
-        cpf: cpf,
+      await axios.post("https://cadastrodeusuarios-production.up.railway.app/usuario", {
+        nome,
+        idade: parsed,
+        email,
       });
-
-      console.log("Usuário cadastrado:", response.data);
       alert("Usuário cadastrado com sucesso!");
-
-      // Limpar os campos após o cadastro
-      setNome("");
-      setIdade("");
-      setCpf("");
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
-
-      // Verificar o status code da resposta de erro
-      if (error.response) {
-        if (error.response.status === 400) {
-          alert("O campo 'Nome' está vazio. Por favor, preencha-o.");
-        } else if (error.response.status === 409) {
-          alert("Erro: Esse CPF já foi cadastrado.");
-        } else {
-          alert("Erro desconhecido. Tente novamente.");
-        }
-      } 
+      setNome(""); setIdade(""); setEmail("");
+    } catch (err) {
+      if (err.response?.status === 400) {
+        alert("O campo 'Nome' está vazio.");
+      } else {
+        alert("Erro desconhecido. Tente novamente.");
+      }
     }
-  };
-
-  // Lógica para limitar a idade em até 3 dígitos
-  const handleIdadeChange = (e) => {
-    let val = e.target.value;
-
-    // Limitar a 3 caracteres
-    if (val.length > 3) {
-      val = val.slice(0, 3);
-    }
-
-    setIdade(val);
-  };
-
-  // Formatação automática do CPF: xxx.xxx.xxx-xx (limite 11 dígitos)
-  const handleCpfChange = (e) => {
-    let val = e.target.value.replace(/\D/g, "");
-    if (val.length > 11) {
-      val = val.slice(0, 11);
-    }
-
-    let masked = "";
-    if (val.length >= 1) {
-      masked = val.substring(0, 3);
-    }
-    if (val.length >= 4) {
-      masked += "." + val.substring(3, 6);
-    }
-    if (val.length >= 7) {
-      masked += "." + val.substring(6, 9);
-    }
-    if (val.length >= 10) {
-      masked += "-" + val.substring(9, 11);
-    }
-
-    setCpf(masked);
   };
 
   return (
     <div className="container">
-      <link rel="icon" />
-      <title>Cadastro de Usuário</title>
-
       <form onSubmit={handleSubmit}>
         <h1>Cadastro de Usuário</h1>
 
-        {/* Nome: texto, até 30 caracteres */}
+        {/* Nome */}
         <div className="input-field">
+          <FaUser className="icon" />
           <input
             type="text"
             placeholder="Nome"
-            value={nome}
             maxLength={30}
+            value={nome}
             onChange={(e) => setNome(e.target.value)}
+            required
           />
-          <FaUser className="icon" />
         </div>
 
-        {/* Idade: limita a 3 dígitos. Bloqueia 'e', 'E', '+', '-' e aceita [18..120] na validação do submit */}
+        {/* Idade */}
         <div className="input-field">
+          <FaBirthdayCake className="icon" />
           <input
             type="number"
             placeholder="Idade"
             value={idade}
-            onChange={handleIdadeChange}
-            onKeyDown={(e) =>
-              ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-            }
+            onChange={(e) => setIdade(e.target.value.slice(0, 3))}
+            onKeyDown={(e) => ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
             min={18}
             max={120}
             required
           />
-          <FaBirthdayCake className="icon" />
         </div>
 
-        {/* CPF: type="text" para poder inserir '.' e '-' na máscara */}
+        {/* E‑mail */}
         <div className="input-field">
+          <FaEnvelope className="icon" />
           <input
-            type="text"
-            placeholder="CPF"
-            value={cpf}
-            onChange={handleCpfChange}
-            minLength={14}
-            maxLength={14} // xxx.xxx.xxx-xx => 14 caracteres
+            type="email"
+            placeholder="E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <FaIdCard className="icon" />
         </div>
 
-        <button>Cadastrar</button>
+        <button type="submit">Cadastrar</button>
+
+        {/* Ajuste a rota conforme seu app */}
+        <Link to="/usuarios" className="lista-btn">
+          Usuários Cadastrados
+        </Link>
       </form>
     </div>
   );
 };
 
-export default Cadastro
+export default Cadastro;

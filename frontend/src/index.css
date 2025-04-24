@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+
+/* Garantir que padding e border entrem no cálculo de width/height */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+:root {
+  --primary:        #1e90ff;
+  --primary-dark:   #0d6efd;
+  --grey-050:       #f8f9fb;
+  --grey-100:       #f0f2f6;
+  --grey-700:       #34495e;
+  --radius:         14px;
+  --shadow-soft:    0 10px 30px rgba(0,0,0,.06);
+  --transition:     all .25s ease;
+}
+
+/* Papel de parede */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: url("https://c4.wallpaperflare.com/wallpaper/235/315/793/minecraft-beautiful-desktop-wallpaper-preview.jpg")
+              center/cover no-repeat fixed;
+  position: relative;
+  isolation: isolate;
+}
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(2px);
+  z-index: -1;
+}
