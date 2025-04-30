@@ -1,5 +1,7 @@
 package dev.marlosemanuel.Cadastro_de_Usuarios_backend.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.mapper.UsuarioMapper;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.model.Usuario;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.repository.UsuarioRepository;
@@ -9,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final Cloudinary cloudinary;
 
     public List<UsuarioResponse> findAll() {
         return usuarioRepository.findAll().stream()
@@ -26,18 +31,21 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> save(UsuarioRequest request) {
+    public ResponseEntity<?> save(UsuarioRequest request, MultipartFile imagem) {
        if (request == null) {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Requisição Invalida");
        }
-       if (request.nome().isEmpty()  || request.idade() == 0 || request.email().isEmpty()) {
+       if (request.nome().isEmpty()  || request.idade() == 0 || request.email().isEmpty() || imagem.isEmpty()) {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Todos os campos devem ser obrigatorios");
        }
        if (usuarioRepository.existsByEmail(request.email())) {
            return ResponseEntity.status(HttpStatus.CONFLICT).body("email já cadastrado.");
        }
        try {
+           Map uploadResult = cloudinary.uploader().upload(imagem.getBytes(), ObjectUtils.emptyMap());
+           String imageUrl = uploadResult.get("secure_url").toString();
            Usuario usuario = UsuarioMapper.mapEntity(request);
+           usuario.setImagemUrl(imageUrl);
            usuarioRepository.save(usuario);
            return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.mapResponse(usuario));
        } catch (Exception e){

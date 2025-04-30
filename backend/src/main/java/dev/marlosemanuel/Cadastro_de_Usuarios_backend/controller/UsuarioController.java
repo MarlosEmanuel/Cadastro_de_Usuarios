@@ -3,8 +3,11 @@ import dev.marlosemanuel.Cadastro_de_Usuarios_backend.request.UsuarioRequest;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.response.UsuarioResponse;
 import dev.marlosemanuel.Cadastro_de_Usuarios_backend.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +31,15 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody UsuarioRequest request) {
-        return usuarioService.save(request);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> create(
+            @RequestParam("nome") String nome,
+            @RequestParam("idade") int idade,
+            @RequestParam("email") String email,
+            @RequestParam("imagem") MultipartFile imagem
+    ) {
+        UsuarioRequest request = new UsuarioRequest(nome, idade, email);
+        return usuarioService.save(request, imagem);
     }
 
     @GetMapping("/pesquisa/{nome}")

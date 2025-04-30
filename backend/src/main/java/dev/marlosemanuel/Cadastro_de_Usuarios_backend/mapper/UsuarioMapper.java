@@ -22,6 +22,7 @@ public class UsuarioMapper {
                 .nome(usuario.getNome())
                 .idade(usuario.getIdade())
                 .email(usuario.getEmail())
+                .imagemUrl(usuario.getImagemUrl())
                 .build();
     }
 
