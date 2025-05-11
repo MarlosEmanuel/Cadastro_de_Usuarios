@@ -8,8 +8,6 @@ const Cadastro = () => {
   const [nome, setNome] = useState("");
   const [idade, setIdade] = useState("");
   const [email, setEmail] = useState(""); // Alterado de cpf para email
-  const [error, setError] = useState("");
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -21,7 +19,7 @@ const Cadastro = () => {
     }
 
     try {
-      const response = await axios.post("https://cadastrodeusuarios-production.up.railway.app/usuario", {
+      const response = await axios.post("http://localhost:8080/usuario", {
         nome: nome,
         idade: parsedIdade,
         email: email,  // Enviando o email para o backend
